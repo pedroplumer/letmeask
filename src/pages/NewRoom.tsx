@@ -2,12 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import illustrationImg from '../assets/images/illustration.svg';
 import logoImg from '../assets/images/logo.svg';
-import googleIconImg from '../assets/images/google-icon.svg';
 import Button from '../components/Button';
 
 import '../styles/auth.scss';
+import useAuth from '../hooks/useAuth';
 
 const NewRoom = () => {
+
+    const {user} = useAuth();
+
     return(
         <div id="page-auth">
             <aside>
@@ -18,6 +21,7 @@ const NewRoom = () => {
             <main>
                 <div className="main-content">
                     <img src={logoImg} alt="LetmeAsk"/>
+                    <h1>{user?.name}</h1>
                     <h2>Criar uma nova sala</h2>
                     <form>
                         <input
