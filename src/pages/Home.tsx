@@ -10,10 +10,10 @@ import useAuth from '../hooks/useAuth';
 
 const Home = () => {
     const history = useHistory();
-    const { user, sigInWithGoogle } = useAuth();
+    const { user, signInWithGoogle } = useAuth();
 
     const handleCreateRoom = async () => {
-        if(!user) await sigInWithGoogle();
+        if(!user) await signInWithGoogle();
 
         history.push('/rooms/new');
     }
