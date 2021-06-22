@@ -33,3 +33,5 @@ const NewRoom = () => {
         </div>
     )
 }
+
+export default NewRoom;
