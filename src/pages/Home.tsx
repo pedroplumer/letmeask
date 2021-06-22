@@ -8,18 +8,17 @@ import Button from '../components/Button';
 import { firebase, auth } from '../services/firebase';
  
 import '../styles/auth.scss';
+import { useContext } from 'react';
+import { AuthContext } from '../App';
 
 const Home = () => {
     const history = useHistory();
+    const { user, sigInWithGoogle } = useContext(AuthContext);
 
-    const handleCreateRoom = () => {
-        const authProvider = new firebase.auth.GoogleAuthProvider();
+    const handleCreateRoom = async () => {
+        if(!user) await sigInWithGoogle();
 
-        auth.signInWithPopup(authProvider).then((result) => {
-
-            history.push('/rooms/new')
-        })
-
+        history.push('/rooms/new');
     }
 
     return (
