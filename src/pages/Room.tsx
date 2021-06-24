@@ -1,6 +1,7 @@
 import Button from '../components/Button';
 import React, { useEffect, useState } from 'react';
 import logoImg from '../assets/images/logo.svg'
+import Question from '../components/Questions/index';
 
 import '../styles/room.scss'
 import RoomCode from '../components/RoomCode';
@@ -20,7 +21,7 @@ type FirebaseQuestions = Record<string, {
     isHighlighted: boolean;
 }>
 
-type Question = {
+type QuestionType = {
     id: string;
     author: {
         name: string;
@@ -39,7 +40,7 @@ const Room = () => {
 
     const [newQuestion, setNewQuestion] = useState('');
     const { user } = useAuth();
-    const [questions, setQuestions] = useState<Question[]>([])
+    const [questions, setQuestions] = useState<QuestionType[]>([])
     const [title, setTitle] = useState('')
 
     const params = useParams<roomParams>();
@@ -48,7 +49,7 @@ const Room = () => {
     useEffect(()=> {
         const roomRef = database.ref(`rooms/${roomId}`);
 
-        roomRef.once('value', room => {
+        roomRef.on('value', room => {
             const databaseRoom = room.val();
             const firebaseQuestions = databaseRoom.questions as FirebaseQuestions;
             const parsedQuestions = Object.entries(firebaseQuestions ?? {}).map(([key,value]) => {
@@ -118,6 +119,20 @@ const Room = () => {
                         <Button type="submit" disabled={!user}>Enviar pergunta</Button>
                     </div>
                 </form>
+
+                <div className="question-list">
+                    {questions.map(question => {
+                        return (
+                            <Question
+                                key={question.id}
+                                content={question.content}
+                                author={question.author}
+                            />
+                        );
+                    })}
+                </div>
+
+                
             </main>
         </div>
     )
