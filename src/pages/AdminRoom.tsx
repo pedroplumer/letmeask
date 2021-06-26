@@ -1,6 +1,8 @@
 import Button from '../components/Button';
 import React, { useEffect, useState } from 'react';
-import logoImg from '../assets/images/logo.svg'
+import logoImg from '../assets/images/logo.svg';
+import deleteImg from '../assets/images/delete.svg';
+
 import Question from '../components/Questions/index';
 
 import '../styles/room.scss'
@@ -11,6 +13,7 @@ import { userInfo } from 'os';
 import { database } from '../services/firebase';
 import { FormEvent } from 'react';
 import useRoom from '../hooks/useRoom';
+import { useHistory } from 'react-router-dom';
 
 
 
@@ -20,34 +23,24 @@ type roomParams = {
 
 const AdminRoom = () => {
 
-    const [newQuestion, setNewQuestion] = useState('');
-    const { user } = useAuth();
+    const history = useHistory();
 
     const params = useParams<roomParams>();
     const roomId = params.id;
 
     const { questions, title } = useRoom(roomId);
 
-
-    const handleSendQuestion = async (event: FormEvent) => {
-        event.preventDefault();
-
-        if(newQuestion.trim() === '') return
-        if(!user) throw new Error('You must be logged in!')
-
-        const question = {
-            content: newQuestion,
-            author: {
-                name: user.name,
-                avatar: user.avatar
-            },
-            isHighLighted: false,
-            isAnswered: false
+    const handleDeleteQuestion = async (questionId: string) => {
+        if (window.confirm('Tem certeza que deseja excluir esta pergunta?')){
+            await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
         }
+    }
 
-        await database.ref(`rooms/${roomId}/questions`).push(question);
-
-        setNewQuestion('')
+    const handleEndRoom = async () => {
+        await database.ref(`rooms/${roomId}`).update({
+            endedAt: new Date()
+        })
+        history.push('/')
     }
 
     return (
@@ -57,7 +50,7 @@ const AdminRoom = () => {
                     <img src={logoImg} alt="letmeask"/>
                     <div>
                         <RoomCode code={params.id}/>
-                        <Button isOutlined >Encerrar sala</Button>
+                        <Button isOutlined onClick={handleEndRoom}>Encerrar sala</Button>
                     </div>
                 </div>
             </header>
@@ -75,7 +68,11 @@ const AdminRoom = () => {
                                 key={question.id}
                                 content={question.content}
                                 author={question.author}
-                            />
+                            >
+                                <button type="button" onClick={() => handleDeleteQuestion(question.id)}>
+                                    <img src={deleteImg} alt="Remover pergunta"/>
+                                </button>
+                            </Question>
                         );
                     })}
                 </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ReactNode } from 'react';
 
 import './index.scss'
 
@@ -7,10 +8,11 @@ type Questionprops = {
     author: {
         avatar: string;
         name: string;
-    }
+    },
+    children?: ReactNode;
 }
 
-const Question = ({content, author} : Questionprops) => {
+const Question = ({content, author, children} : Questionprops) => {
 
     return(
         <div className="question">
@@ -19,6 +21,9 @@ const Question = ({content, author} : Questionprops) => {
                 <div className="user-info">
                     <img src={author.avatar} alt={author.name}/>
                     <span>{author.name}</span>
+                </div>
+                <div>
+                    {children}
                 </div>
 
             </footer>
