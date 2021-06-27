@@ -2,6 +2,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) @ rocketset-nlw.
 Built to practice working with **ReactJS**, **TypeScript**, **Sass** and **Firebase**
+You can access the deployed application here: https://letmeask-1af60.web.app/
 
 ## TODO
 -Responsiveness
